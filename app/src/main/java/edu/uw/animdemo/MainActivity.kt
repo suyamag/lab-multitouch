@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
+import edu.uw.animdemo.DrawingView
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,21 +48,45 @@ class MainActivity : AppCompatActivity() {
         when (action) {
             MotionEvent.ACTION_DOWN //put finger down
             -> {
-                //Log.v(TAG, "finger down");
+//                Log.v(TAG, "finger down");
+                val index = MotionEventCompat.getActionIndex(event)
+                val id = MotionEventCompat.getPointerId(event, index)
+                Log.v(TAG, "another finger down with id $id")
+                val x = MotionEventCompat.getX(event, index)
+                val y = MotionEventCompat.getY(event, index)
+                view!!.addTouch(id, x, y)
 
-                val xAnim = ObjectAnimator.ofFloat(view!!.ball, "x", x)
-                xAnim.duration = 1000
-                val yAnim = ObjectAnimator.ofFloat(view!!.ball, "y", y)
-                yAnim.duration = 1500 //y moves 1.5x slower
-
-                val set = AnimatorSet()
-                set.playTogether(yAnim, xAnim)
-                set.start()
+//                val xAnim = ObjectAnimator.ofFloat(view!!.ball, "x", x)
+//                xAnim.duration = 1000
+//                val yAnim = ObjectAnimator.ofFloat(view!!.ball, "y", y)
+//                yAnim.duration = 1500 //y moves 1.5x slower
+//
+//                val set = AnimatorSet()
+//                set.playTogether(yAnim, xAnim)
+//                set.start()
 
                 //                view.ball.cx = x;
                 //                view.ball.cy = y;
                 //                view.ball.dx = (x - view.ball.cx)/Math.abs(x - view.ball.cx)*30;
                 //                view.ball.dy = (y - view.ball.cy)/Math.abs(y - view.ball.cy)*30;
+                return true
+            }
+            MotionEvent.ACTION_POINTER_DOWN
+            -> {
+                val index = MotionEventCompat.getActionIndex(event)
+                val id = MotionEventCompat.getPointerId(event, index)
+                Log.v(TAG, "another finger down with id $id")
+                val x = MotionEventCompat.getX(event, index)
+                val y = MotionEventCompat.getY(event, index)
+                view!!.addTouch(id, x, y)
+                return true
+            }
+            MotionEvent.ACTION_POINTER_UP
+            -> {
+                val index = MotionEventCompat.getActionIndex(event)
+                val id = MotionEventCompat.getPointerId(event, index)
+                Log.v(TAG, "another finger up with id $id")
+                view!!.removeTouch(id)
                 return true
             }
             MotionEvent.ACTION_MOVE //move finger
@@ -73,7 +98,12 @@ class MainActivity : AppCompatActivity() {
             MotionEvent.ACTION_UP //lift finger up
                 , MotionEvent.ACTION_CANCEL //aborted gesture
                 , MotionEvent.ACTION_OUTSIDE //outside bounds
-            -> return super.onTouchEvent(event)
+            -> {
+                val index = MotionEventCompat.getActionIndex(event)
+                val id = MotionEventCompat.getPointerId(event, index)
+                Log.v(TAG, "another finger up with id $id")
+                view!!.removeTouch(id)
+                return super.onTouchEvent(event)}
             else -> return super.onTouchEvent(event)
         }
     }

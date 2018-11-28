@@ -8,6 +8,11 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import kotlin.collections.AbstractMutableSet;
+
 /**
  * A basic custom view for drawing on.
  * @author Joel Ross
